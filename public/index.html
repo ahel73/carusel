@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <link rel="stylesheet" href="<%= BASE_URL %>reset.css" />
+    <script src="https://use.fontawesome.com/4c79488e95.js"></script>
+    <script src="https://widget.cloudpayments.ru/bundles/cloudpayments"></script>
+    
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script>
+      document.body.addEventListener('click', function(oe){
+        if (!oe.target.classList.contains('platej')) return;
+        
+        let options = { //options
+            publicId: 'pk_05d0d4b7f635d652dbebb3a21b58c', //id из личного кабинета, 
+            //новый от Андрея pk_4973afb45c89acfda7116267a9278
+            description: 'Оплата самоката в системе carusel', //назначение
+            amount: 10 || +document.querySelector('.sum').innerText, //сумма
+            currency: 'RUB', //валюта
+            accountId: '7ce45c84-cc3c-4c8b-9912-6b4f24203335', //идентификатор плательщика (необязательно)
+            invoiceId: '1234567', //номер заказа  (необязательно)
+            skin: "mini", //дизайн виджета (необязательно)
+        }
+
+        console.log(options);
+
+        var widget = new cp.CloudPayments();
+        widget.pay('charge', // или 'charge'
+            options,
+            {
+                onSuccess: function (options) { // success
+                    alert('успешно') //действие при успешной оплате
+                },
+                onFail: function (reason, options) { // fail
+                    alert('не успешно') //действие при неуспешной оплате
+                },
+                onComplete: function (paymentResult, options) { //Вызывается как только виджет получает от api.cloudpayments ответ с результатом транзакции.
+                    alert('ответ с результатом тразакции') //например вызов вашей аналитики Facebook Pixel
+                }
+            }
+        )
+      })
+    </script>
+  </body>
+</html>
